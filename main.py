@@ -3,7 +3,7 @@ import pandas as pd
 import psycopg2
 from datetime import datetime
 
-print("🌤️ Début du pipeline météo...")
+print(" Début du pipeline météo...")
 
 # 1. Récupérer les données météo de Nantes via une API publique (gratuite, sans clé)
 url = "https://api.open-meteo.com/v1/forecast?latitude=47.22&longitude=-1.55&current_weather=true"
@@ -11,11 +11,11 @@ response = requests.get(url)
 
 # Vérifier que l'API a bien répondu
 if response.status_code != 200:
-    print("❌ Erreur API :", response.status_code)
+    print("Erreur API :", response.status_code)
     exit()
 
 data = response.json()
-print("✅ Données récupérées avec succès")
+print(" Données récupérées avec succès")
 
 # 2. Extraire les informations
 meteo = {
@@ -28,7 +28,7 @@ meteo = {
 
 # 3. Créer un DataFrame Pandas (comme un tableau)
 df = pd.DataFrame([meteo])
-print("📊 Données récupérées :")
+print(" Données récupérées :")
 print(df)
 
 # 4. Se connecter à PostgreSQL
@@ -41,9 +41,9 @@ try:
         password="admin"
     )
     cur = conn.cursor()
-    print("✅ Connexion à PostgreSQL réussie")
+    print(" Connexion à PostgreSQL réussie")
 except Exception as e:
-    print("❌ Erreur de connexion :", e)
+    print("Erreur de connexion :", e)
     exit()
 
 # 5. Créer la table (si elle n'existe pas)
@@ -59,7 +59,7 @@ cur.execute("""
     )
 """)
 conn.commit()
-print("✅ Table vérifiée/créée")
+print("Table vérifiée/créée")
 
 # 6. Insérer les données
 cur.execute("""
@@ -71,6 +71,6 @@ conn.commit()
 cur.close()
 conn.close()
 
-print("✅ Données météo stockées avec succès dans PostgreSQL !")
-print("📅 Date :", meteo["date"])
-print("🌡️ Température :", meteo["temperature"], "°C")
+print(" Données météo stockées avec succès dans PostgreSQL !")
+print(" Date :", meteo["date"])
+print(" Température :", meteo["temperature"], "°C")
